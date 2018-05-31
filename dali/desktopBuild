@@ -1,0 +1,81 @@
+#!/bin/bash
+
+CURRENT_DIR=${PWD}
+
+echo $CURRENT_DIR
+
+
+makey()
+{
+  make install -j8
+}
+
+buildCcache()
+{
+  echo "DESKTOP Cache"
+  autoreconf --install &&  CXXFLAGS="-g -O0 --coverage" LDFLAGS="--coverage"  CXX="ccache g++" CC="ccache gcc" INSTALL="./install-sh -c -C" ./configure --prefix=$DESKTOP_PREFIX --enable-debug
+}
+
+buildGeneric()
+{
+  echo "DESKTOP generic"
+  autoreconf --install &&  INSTALL="./install-sh -c -C" ./configure --prefix=$DESKTOP_PREFIX --enable-debug
+}
+
+buildDemo()
+{
+  cmake -DCMAKE_INSTALL_PREFIX=$DESKTOP_PREFIX -DCMAKE_BUILD_TYPE=Debug
+}
+
+build()
+{
+  echo "build for "
+
+  case "$1" in
+
+  1)  echo "Configure only generic"
+      buildGeneric
+      ;;
+  2)  echo "Ccache"
+      buildCcache && makey
+      ;;
+  *)  echo "Generic"
+      buildGeneric && makey 
+      ;;
+  esac
+}
+
+dali-core()
+{
+  cd $CURRENT_DIR/dali-core/build/tizen
+  build $1
+}
+
+dali-adaptor()
+{
+  cd $CURRENT_DIR/dali-adaptor/build/tizen
+  build $1
+}
+
+dali-toolkit()
+{
+  cd $CURRENT_DIR/dali-toolkit/build/tizen
+  build $1
+}
+
+dali-demo()
+{
+  cd $CURRENT_DIR/dali-demo/build/tizen
+  case "$1" in
+
+  1) buildDemo
+     ;;
+  *) buildDemo && makey
+     ;;
+  esac 
+}
+
+dali-core $1 && dali-adaptor $1 && dali-toolkit $1 && dali-demo $1
+
+
+
