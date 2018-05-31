@@ -1,0 +1,49 @@
+#!/bin/bash
+
+###############################################################################
+# Removes all installed Dali files
+###############################################################################
+UninstallDali()
+{
+  echo Uninstalling dali from $DESKTOP_PREFIX
+  rm -rf $DESKTOP_PREFIX/include/dali*
+  rm -rf $DESKTOP_PREFIX/share/app.dali*
+  rm -rf $DESKTOP_PREFIX/share/com.samsung.dali*
+  rm -rf $DESKTOP_PREFIX/share/dali*
+  rm -rf $DESKTOP_PREFIX/share/doc/dali*
+  rm -f  $DESKTOP_PREFIX/lib/libdali*
+  rm -f  $DESKTOP_PREFIX/bin/dali-*
+  rm -f  $DESKTOP_PREFIX/bin/*.example
+  rm -f  $DESKTOP_PREFIX/lib/pkgconfig/dali*.pc
+}
+
+###############################################################################
+# Ensure $DESKTOP_PREFIX is set
+###############################################################################
+if [ -z $DESKTOP_PREFIX ]; then
+  echo "\$DESKTOP_PREFIX not set"
+  exit 1
+fi
+
+###############################################################################
+# If forced, just uninstall and exit
+###############################################################################
+if [ "$1" = "-f" ]
+then
+  echo forced uninstall
+  UninstallDali
+  exit 0
+fi
+
+###############################################################################
+# Ask if the user really wants to uninstall
+###############################################################################
+# Add "-n 1" to the end of the next line to disable need for enter
+read -p "Uninstall dali from $DESKTOP_PREFIX? " -n 1
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  echo "\n"
+  UninstallDali
+fi
+
+echo
