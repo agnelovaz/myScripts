@@ -13,16 +13,16 @@ makey()
 buildCcache()
 {
   echo "DESKTOP Cache"
-  autoreconf --install &&  CXXFLAGS="-g -O0 --coverage" LDFLAGS="--coverage"  CXX="ccache g++" CC="ccache gcc" INSTALL="./install-sh -c -C" ./configure --prefix=$DESKTOP_PREFIX --enable-debug
+  autoreconf --install &&  CXXFLAGS="-g -O0 --coverage" LDFLAGS="--coverage"  CXX="ccache g++" CC="ccache gcc" INSTALL="./install-sh -c -C" ./configure --prefix=$DESKTOP_PREFIX --enable-debug --enable-networklogging
 }
 
 buildGeneric()
 {
   echo "DESKTOP generic"
-  autoreconf --install &&  INSTALL="./install-sh -c -C" ./configure --prefix=$DESKTOP_PREFIX --enable-debug
+  autoreconf --install &&  CXXFLAGS="-g -O0 --coverage" INSTALL="./install-sh -c -C" ./configure --prefix=$DESKTOP_PREFIX --enable-debug --enable-networklogging
 }
 
-buildDemo()
+cmakeSetup()
 {
   cmake -DCMAKE_INSTALL_PREFIX=$DESKTOP_PREFIX -DCMAKE_BUILD_TYPE=Debug
 }
@@ -45,10 +45,23 @@ build()
   esac
 }
 
+buildCmake()
+{
+  case "$1" in
+
+  1) echo "Cmake setup only"
+     cmakeSetup
+     ;;
+  *) echo "Cmake setup and build"
+     cmakeSetup && makey
+     ;;
+  esac
+}
+
 dali-core()
 {
   cd $CURRENT_DIR/dali-core/build/tizen
-  build $1
+  buildCmake $1
 }
 
 dali-adaptor()
@@ -60,22 +73,22 @@ dali-adaptor()
 dali-toolkit()
 {
   cd $CURRENT_DIR/dali-toolkit/build/tizen
+  buildCmake $1
+}
+
+dali-csharp-binder()
+{
+  cd $CURRENT_DIR/dali-csharp-binder/build/tizen
   build $1
 }
 
 dali-demo()
 {
   cd $CURRENT_DIR/dali-demo/build/tizen
-  case "$1" in
-
-  1) buildDemo
-     ;;
-  *) buildDemo && makey
-     ;;
-  esac 
+ buildCmake $1 
 }
 
-dali-core $1 && dali-adaptor $1 && dali-toolkit $1 && dali-demo $1
+dali-core $1 && dali-adaptor $1 && dali-toolkit $1 && dali-csharp-binder $1 && dali-demo $1
 
 
 
