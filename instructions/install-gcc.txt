@@ -1,0 +1,22 @@
+Install gcc
+
+1) Add below to /etc/apt/sources.list (from https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test?field.series_filter=xenial )
+
+deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu xenial main 
+
+$apt update
+
+2) Get key if NO_PUBKEY  <missing key>
+   Replacing <missing key> with key shown in error message
+
+gpg --keyserver pgpkeys.mit.edu --recv-key <missing key>
+gpg -a --export <missing key> | sudo apt-key add -
+
+$apt update
+
+4) install gcc version
+sudo apt install gcc-6
+
+
+
+

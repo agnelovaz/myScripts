@@ -60,30 +60,35 @@ buildCmake()
 
 dali-core()
 {
+  echo "building dali core"
   cd $CURRENT_DIR/dali-core/build/tizen
   buildCmake $1
 }
 
 dali-adaptor()
 {
+  echo "building dali adaptor"
   cd $CURRENT_DIR/dali-adaptor/build/tizen
-  build $1
+  buildCmake $1
 }
 
 dali-toolkit()
 {
+  echo "building dali toolkit"
   cd $CURRENT_DIR/dali-toolkit/build/tizen
   buildCmake $1
 }
 
 dali-csharp-binder()
 {
+  echo "building dali binder"
   cd $CURRENT_DIR/dali-csharp-binder/build/tizen
-  build $1
+  buildCmake $1
 }
 
 dali-demo()
 {
+  echo "building dali demo"
   cd $CURRENT_DIR/dali-demo/build/tizen
  buildCmake $1 
 }
