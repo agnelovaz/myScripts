@@ -1,0 +1,9 @@
+1) Created shared folder "share" in VM which creates "share" in Windows.
+2) In linux 
+	$ mkdir ~/shared-windows10
+	$ sudo mount -t vboxsf share ~/shared-windows10
+
+may need to install virtualbox guest additions if vboxsf not found
+
+sudo apt install virtualbox-guest-additions-iso
+
